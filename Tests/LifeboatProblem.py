@@ -26,7 +26,6 @@ if __name__ == "__main__":
     # f_propinquity: 1
     # f_multiplier: 9
     # Multiplier: 9 -- 3 families with 3 people each
-
     LifeboatProblem_HelpFamilies.createAgent(True, 5, 3, 1, 1, 1, 0, 9, 0, 0, 0, 0, 3, 8, 1, 9)
 
     # Agent 2: The seniors
