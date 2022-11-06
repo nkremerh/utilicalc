@@ -3,6 +3,8 @@ from FelicificCalculus import EvaluateDecisions
 
 if __name__ == "__main__":
     """
+    Source: https://icebreakerideas.com/moral-dilemma-questions/
+    
     You are on a cruise and the ship encounters an unexpected storm. The storm continues to rage and eventually you and the 
     other passengers are told you must head to the lifeboats and abandon ship. As people begin to line up, you realize some 
     lines have fewer people, some have families, and some seem to have younger, single people. You know you are strong and 
