@@ -38,7 +38,7 @@ import math
 
 class Consequence:
     """
-    This class is used to calculate the moral value the consequence of an action on an agent/agents.
+    This class is used to calculate the moral value a single consequence of an action.
 
     Variables:
     intensity = the intensity of the consequence
