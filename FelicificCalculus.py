@@ -1,48 +1,62 @@
 """
 The purpose of this class is to provide a set of methods for calculating the moral value of an action.
 The moral value of an action is the sum of the moral value of the consequences of the action.
-We will calculate this by using Jeremy Bentham's formula, called the "Felicific Calculus", which is defined as such:
+We will calculate this by using Jeremy Bentham's formula, called "Felicific Calculus", "Hedonic Calculus", or
+"Utilitarian Calculus", which is defined as such:
 
 Variables:
     For pleasure:
     I = the intensity of pleasure
     D = the duration of pleasure
     C = certainty of pleasure
-    N = propinquity or nearness of pleasure
+    N = propinquity or nearness in time of the pleasure
     F = fecundity or probability of 2nd order pleasure (the pleasure stemming from the pleasure)
     P = purity or probability of 2nd order pain (the pain stemming from the pleasure)
-    M = multiplier for number of people affected equally by the pleasure
+    E = how many people are affected by the pleasure
 
     For pain:
     I = the intensity of pain
     D = the duration of pain
     C = certainty of pain
-    N = propinquity or nearness of pain
+    N = propinquity or nearness in time of the pain
     F = fecundity or probability of 2nd order pain (the pain stemming from the pain)
     P = purity or probability of 2nd order pleasure (the pleasure stemming from the pain)
-    M = multiplier for number of people affected equally by the pain
+    E = how many people are affected by the pain
 
 Formula:
-    For each person affected by the action, the moral value of the action is calculated as follows:
+    For each agent (or group of agents equally) affected by the action, the moral value of the action is calculated as follows:
         C * (I * D * N * M) must be calculated for each pleasure and pain, and for each 2nd order pleasure and pain.
         For 2nd order pleasure and pain, the same formula is used, but C is replaced with F or P, respectively.
         Pain is calculated as a negative value, and pleasure is calculated as a positive value.
-        The sum of all of these values is the moral value of the action for this person.
+        The sum of all of these values is the moral value of the action for this/these agent(s).
 
     All of these values are summed together to get the total moral value of an action.
 """
 
-"""
-Consequence of an action
-"""
+import math
 
 
 class Consequence:
+    """
+    This class is used to calculate the moral value the consequence of an action on an agent/agents.
+
+    Variables:
+    intensity = the intensity of the consequence
+    duration = the duration of the consequence
+    certainty = the certainty of the consequence
+    propinquity = the propinquity (nearness in time) of the consequence (1/propinquity^0.1) - arbitrary but needs to decay over time
+    multiplier = the multiplier for the number of people affected equally by the consequence
+    isPleasure = whether the consequence is a pleasure or pain (if false, pleasure is multiplied by -1)
+
+    Methods:
+    getMoralValue() returns the moral value of the consequence
+    """
+
     def __init__(self, intensity, duration, certainty, propinquity, multiplier, isPleasure):
         self.intensity = intensity
         self.duration = duration
         self.certainty = certainty
-        self.propinquity = propinquity  # TODO: Change to 1/propinquity?
+        self.propinquity = 1 / math.pow(propinquity, .1) if propinquity != 0 else 1
         self.multiplier = multiplier
         self.isPleasure = isPleasure
 
@@ -53,19 +67,37 @@ class Consequence:
             return -1 * self.certainty * (self.intensity * self.duration * self.propinquity * self.multiplier)
 
 
-"""
-Agent(s) affected by an action, each instance has a list of consequences
-Fecundity and purity (and their corresponding variables f_... and p_...) are only used for 2nd order consequences
-Fecundity and purity are the probability of a 2nd order consequence.
-Each Agents instance has a list of consequences, which are instances of the Consequence class and are added up by
-the getMoralValue method to get the moral value of the action for this agent.
-"""
-
-
 class Agent:
+    """
+    This class is used to calculate the moral value of an action on an agent/agents.
+
+    Variables:
+    isPleasure = whether the action is a pleasure or pain (if false, output of this consequence is multiplied by -1)
+    intensity = the intensity of the action
+    duration = the duration of the action
+    certainty = the certainty of the action
+    propinquity = the propinquity (nearness in time) of the action (1/propinquity^0.1) - arbitrary but needs to decay over time
+    multiplier = the multiplier for the number of people affected equally by the action
+
+    Optional Variables:
+    f_intensity = the intensity of the 2nd order consequence of the same type
+    f_duration = the duration of the 2nd order consequence of the same type
+    f_propinquity = the propinquity (nearness in time) of the 2nd order consequence of the same type
+    f_multiplier = the multiplier for the number of people affected equally by the 2nd order consequence of the same type
+
+    p_intensity = the intensity of the 2nd order consequence of the opposite type
+    p_duration = the duration of the 2nd order consequence of the opposite type
+    p_propinquity = the propinquity (nearness in time) of the 2nd order consequence of the opposite type
+    p_multiplier = the multiplier for the number of people affected equally by the 2nd order consequence of the opposite type
+
+    Methods:
+        getMoralValue() returns the moral value of the action
+    """
+
     def __init__(self, isPleasure, intensity, duration, certainty, propinquity, fecundity, purity, multiplier,
                  f_intensity=0, f_duration=0, f_propinquity=0, f_multiplier=0,
-                 p_intensity=0, p_duration=0, p_propinquity=0, p_multiplier=0):  # TODO: Are f_multiplier and p_multiplier necessary?
+                 p_intensity=0, p_duration=0, p_propinquity=0,
+                 p_multiplier=0):
 
         self.consequences = []
 
@@ -93,14 +125,21 @@ class Agent:
         return moralValue
 
 
-"""
-Decision to be made, which has consequences for multiple agents
-self_interest_scale is a value between 0 and 1, which is used to weight the consequences of the decision in order to
-look at the consequences for the decision maker from an egoistic (1) or altruistic (0) perspective.
-"""
-
-
 class Decision:
+    """
+    This class is used to calculate the moral value of a decision on agents.
+
+    Variables:
+    self_interest_scale = the scale of self-interest (0 = altruistic, 1 = egoistic)
+    agents = a list of agents affected by the decision
+
+    Methods:
+        createAgent() creates an agent to add to the decision
+        getMoralValue() returns the summed moral value of the decision for all agents
+        setSelfInterestScale() sets the self-interest scale
+        checkForDecisionMaker() checks if there is a decision maker among the agents
+    """
+
     def __init__(self, self_interest_scale=None):
         self.self_interest_scale = self_interest_scale
         self.agents = []
@@ -109,6 +148,7 @@ class Decision:
                     f_intensity=0, f_duration=0, f_propinquity=0, f_multiplier=0,
                     p_intensity=0, p_duration=0, p_propinquity=0, p_multiplier=0, is_decision_maker=False):
 
+        # if we have a decision maker, we need to note that
         if is_decision_maker:
             self.agents.append(
                 (Agent(isPleasure, intensity, duration, certainty, propinquity, fecundity, purity, multiplier,
@@ -145,18 +185,29 @@ class Decision:
         return False
 
 
-
-"""
-Evaluates multiple decisions can print the decision with the highest moral value
-Decisions are created outside of this class and added through addDecision
-"""
-
-
 class EvaluateDecisions:
+    """
+    Evaluates multiple decisions, which are added to this object
+
+    Variables:
+    self_interest_scale = the scale of self-interest (0 = altruistic, 1 = egoistic)
+    decisions = the decisions to be evaluated
+
+    Methods:
+        addDecision() adds a decision to the list of decisions
+        setSelfInterestScale() sets the self-interest scale for all decisions
+        printMoralValueForAllDecisions() prints the moral value for all decisions
+        printBestDecision() prints the decision with the highest moral value
+        getBestDecision() returns the name of the decision with the highest moral value
+    """
+
     def __init__(self):
+        self.self_interest_scale = None
         self.decisions = []
 
     def addDecision(self, decision_name, decision):
+        if self.setSelfInterestScale is not None:
+            decision.setSelfInterestScale(self.self_interest_scale)
         self.decisions.append((decision_name, decision))
 
     def setSelfInterestScale(self, self_interest_scale):
@@ -172,6 +223,7 @@ class EvaluateDecisions:
         elif self_interest_scale == 1:
             print("Set self interest to Egoistic")
 
+        self.self_interest_scale = self_interest_scale
         for decision in self.decisions:
             decision[1].setSelfInterestScale(self_interest_scale)
 
@@ -188,3 +240,7 @@ class EvaluateDecisions:
         if bestDecision.self_interest_scale is not None:
             print("This decision was made with a self interest scale of " + str(bestDecision.self_interest_scale))
         print()
+
+    def getBestDecision(self):
+        bestDecisionName, bestDecision = max(self.decisions, key=lambda x: x[1].getMoralValue())
+        return bestDecisionName
