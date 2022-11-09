@@ -36,37 +36,6 @@ Formula:
 import math
 
 
-class Consequence:
-    """
-    This class is used to calculate the moral value a single consequence of an action.
-
-    Variables:
-    intensity = the intensity of the consequence
-    duration = the duration of the consequence
-    certainty = the certainty of the consequence
-    propinquity = the propinquity (nearness in time) of the consequence (1/propinquity^0.1) - arbitrary but needs to decay over time
-    multiplier = the multiplier for the number of people affected equally by the consequence
-    isPleasure = whether the consequence is a pleasure or pain (if false, pleasure is multiplied by -1)
-
-    Methods:
-    getMoralValue() returns the moral value of the consequence
-    """
-
-    def __init__(self, intensity, duration, certainty, propinquity, multiplier, isPleasure):
-        self.intensity = intensity
-        self.duration = duration
-        self.certainty = certainty
-        self.propinquity = 1 / math.pow(propinquity, .1) if propinquity != 0 else 1
-        self.multiplier = multiplier
-        self.isPleasure = isPleasure
-
-    def getMoralValue(self):
-        if self.isPleasure:
-            return self.certainty * (self.intensity * self.duration * self.propinquity * self.multiplier)
-        else:
-            return -1 * self.certainty * (self.intensity * self.duration * self.propinquity * self.multiplier)
-
-
 class Agent:
     """
     This class is used to calculate the moral value of an action on an agent/agents.
@@ -100,29 +69,40 @@ class Agent:
                  p_multiplier=0):
 
         self.consequences = []
+        self.addConsequence(isPleasure, intensity, duration, certainty, propinquity, fecundity, purity, multiplier,
+                            f_intensity, f_duration, f_propinquity, f_multiplier, p_intensity, p_duration,
+                            p_propinquity,
+                            p_multiplier)
 
-        self.consequences.append(Consequence(intensity, duration, certainty, propinquity, multiplier, isPleasure))
+    def getConsequences(self):
+        return self.consequences
+
+    def addConsequence(self, isPleasure, intensity, duration, certainty, propinquity, fecundity, purity, multiplier,
+                       f_intensity=0, f_duration=0, f_propinquity=0, f_multiplier=0,
+                       p_intensity=0, p_duration=0, p_propinquity=0,
+                       p_multiplier=0):
+
+        adjusted_propinquity = 1 / math.pow(propinquity, .1) if propinquity != 0 else 1
+
+        if isPleasure:
+            self.consequences.append(certainty * (intensity * duration * adjusted_propinquity * multiplier))
+        else:
+            self.consequences.append(-1 * certainty * (intensity * duration * adjusted_propinquity * multiplier))
 
         # The following lines are used to add 2nd order consequences.
         if isPleasure:
-            self.consequences.append(
-                Consequence(f_intensity, f_duration, fecundity, f_propinquity, f_multiplier, True))
-
-            self.consequences.append(Consequence(p_intensity, p_duration, purity, p_propinquity, p_multiplier, False))
+            f_adjusted_propinquity = 1 / math.pow(f_propinquity, .1) if f_propinquity != 0 else 1
+            self.consequences.append(fecundity * (f_intensity * f_duration * f_adjusted_propinquity * f_multiplier))
+            self.consequences.append(-1 * purity * (p_intensity * p_duration * f_adjusted_propinquity * p_multiplier))
 
         else:
+            p_adjusted_propinquity = 1 / math.pow(p_propinquity, .1) if p_propinquity != 0 else 1
             self.consequences.append(
-                Consequence(f_intensity, f_duration, fecundity, f_propinquity, f_multiplier, False))
-
-            self.consequences.append(Consequence(p_intensity, p_duration, purity, p_propinquity, p_multiplier, True))
+                -1 * fecundity * (f_intensity * f_duration * p_adjusted_propinquity * f_multiplier))
+            self.consequences.append(purity * (p_intensity * p_duration * p_adjusted_propinquity * p_multiplier))
 
     def getMoralValue(self):
-        moralValue = 0
-
-        for consequence in self.consequences:
-            moralValue += consequence.getMoralValue()
-
-        return moralValue
+        return sum(self.consequences)
 
 
 class Decision:
