@@ -92,18 +92,14 @@ class Agent:
         # The following lines are used to add 2nd order consequences.
         if isPleasure:
             f_adjusted_propinquity = 1 / math.pow(f_propinquity, .1) if f_propinquity != 0 else 1
-            if fecundity != 0:
-                self.consequences.append(fecundity * (f_intensity * f_duration * f_adjusted_propinquity * f_multiplier))
-            if purity != 0:
-                self.consequences.append(-1 * purity * (p_intensity * p_duration * f_adjusted_propinquity * p_multiplier))
+            self.consequences.append(fecundity * (f_intensity * f_duration * f_adjusted_propinquity * f_multiplier))
+            self.consequences.append(-1 * purity * (p_intensity * p_duration * f_adjusted_propinquity * p_multiplier))
 
         else:
             p_adjusted_propinquity = 1 / math.pow(p_propinquity, .1) if p_propinquity != 0 else 1
-            if fecundity != 0:
-                self.consequences.append(
-                    -1 * fecundity * (f_intensity * f_duration * p_adjusted_propinquity * f_multiplier))
-            if purity != 0:
-                self.consequences.append(purity * (p_intensity * p_duration * p_adjusted_propinquity * p_multiplier))
+            self.consequences.append(
+                -1 * fecundity * (f_intensity * f_duration * p_adjusted_propinquity * f_multiplier))
+            self.consequences.append(purity * (p_intensity * p_duration * p_adjusted_propinquity * p_multiplier))
 
     def getMoralValue(self):
         return sum(self.consequences)
@@ -127,16 +123,16 @@ class Decision:
         checkForDecisionMaker() checks if there is a decision maker among the agents
     """
 
-    def __init__(self, selfInterestScale=None):
-        self.selfInterestScale = selfInterestScale
+    def __init__(self, self_interest_scale=None):
+        self.self_interest_scale = self_interest_scale
         self.agents = []
 
     def createAgent(self, isPleasure, intensity, duration, certainty, propinquity, fecundity, purity, multiplier,
                     f_intensity=0, f_duration=0, f_propinquity=0, f_multiplier=0,
-                    p_intensity=0, p_duration=0, p_propinquity=0, p_multiplier=0, isDecisionMaker=False):
+                    p_intensity=0, p_duration=0, p_propinquity=0, p_multiplier=0, is_decision_maker=False):
 
         # if we have a decision maker, we need to note that
-        if isDecisionMaker:
+        if is_decision_maker:
             self.agents.append(
                 (Agent(isPleasure, intensity, duration, certainty, propinquity, fecundity, purity, multiplier,
                        f_intensity, f_duration, f_propinquity, f_multiplier,
@@ -152,20 +148,20 @@ class Decision:
         return self.agents
 
     def getSelfInterestScale(self):
-        return self.selfInterestScale
+        return self.self_interest_scale
 
-    def setSelfInterestScale(self, selfInterestScale):
-        self.selfInterestScale = selfInterestScale
+    def setSelfInterestScale(self, self_interest_scale):
+        self.self_interest_scale = self_interest_scale
 
     def getMoralValue(self):
         totalMoralValue = 0
 
         for agent in self.agents:
-            if self.selfInterestScale is not None:
+            if self.self_interest_scale is not None:
                 if agent[1]:
-                    totalMoralValue += agent[0].getMoralValue() * self.selfInterestScale
+                    totalMoralValue += agent[0].getMoralValue() * self.self_interest_scale
                 else:
-                    totalMoralValue += agent[0].getMoralValue() * (1 - self.selfInterestScale)
+                    totalMoralValue += agent[0].getMoralValue() * (1 - self.self_interest_scale)
             else:
                 totalMoralValue += agent[0].getMoralValue()
 
@@ -175,11 +171,11 @@ class Decision:
         totalMoralValue = 0
 
         for agent in self.agents:
-            if self.selfInterestScale is not None:
+            if self.self_interest_scale is not None:
                 if agent[1]:
-                    totalMoralValue += agent[0].getNegativeMoralValue() * self.selfInterestScale
+                    totalMoralValue += agent[0].getNegativeMoralValue() * self.self_interest_scale
                 else:
-                    totalMoralValue += agent[0].getNegativeMoralValue() * (1 - self.selfInterestScale)
+                    totalMoralValue += agent[0].getNegativeMoralValue() * (1 - self.self_interest_scale)
             else:
                 totalMoralValue += agent[0].getNegativeMoralValue()
 
@@ -197,7 +193,7 @@ class EvaluateDecisions:
     Evaluates multiple decisions, which are added to this object
 
     Variables:
-    selfInterestScale = the scale of self-interest (0 = altruistic, 1 = egoistic)
+    self_interest_scale = the scale of self-interest (0 = altruistic, 1 = egoistic)
     decisions = the decisions to be evaluated
 
     Methods:
@@ -209,36 +205,30 @@ class EvaluateDecisions:
     """
 
     def __init__(self):
-        self.selfInterestScale = None
+        self.self_interest_scale = None
         self.decisions = []
 
-    def getSelfInterestScale(self):
-        return self.selfInterestScale
-
-    def getDecisions(self):
-        return self.decisions
-
-    def addDecision(self, decisionName, decision):
+    def addDecision(self, decision_name, decision):
         if self.setSelfInterestScale is not None:
-            decision.setSelfInterestScale(self.selfInterestScale)
-        self.decisions.append((decisionName, decision))
+            decision.setSelfInterestScale(self.self_interest_scale)
+        self.decisions.append((decision_name, decision))
 
-    def setSelfInterestScale(self, selfInterestScale):
-        if selfInterestScale > 1 or selfInterestScale < 0:
+    def setSelfInterestScale(self, self_interest_scale):
+        if self_interest_scale > 1 or self_interest_scale < 0:
             raise ValueError("Self interest scale must be between 0 and 1.")
 
         for decision in self.decisions:
             if not decision[1].hasDecisionMaker():
                 print("Warning: Decision " + decision[0] + " does not have a decision maker.")
 
-        if selfInterestScale == 0:
+        if self_interest_scale == 0:
             print("Set self interest to Altruistic")
-        elif selfInterestScale == 1:
+        elif self_interest_scale == 1:
             print("Set self interest to Egoistic")
 
-        self.selfInterestScale = selfInterestScale
+        self.self_interest_scale = self_interest_scale
         for decision in self.decisions:
-            decision[1].setSelfInterestScale(selfInterestScale)
+            decision[1].setSelfInterestScale(self_interest_scale)
 
     def printMoralValueForAllDecisions(self):
         for decision in self.decisions:
@@ -251,8 +241,8 @@ class EvaluateDecisions:
             "The best decision from a standard Utilitarian perspective is: " + bestDecisionName + ". with a moral value of " + str(
                 bestDecision.getMoralValue()))
 
-        if bestDecision.selfInterestScale is not None:
-            print("This decision was made with a self interest scale of " + str(bestDecision.selfInterestScale))
+        if bestDecision.self_interest_scale is not None:
+            print("This decision was made with a self interest scale of " + str(bestDecision.self_interest_scale))
         print()
 
     # prints the decision with the negative moral value closest to 0
@@ -263,8 +253,8 @@ class EvaluateDecisions:
             "The best decision from a Negative Utilitarian perspective is: " + bestDecisionName + ". with a moral value of " + str(
                 bestDecision.getMoralValue()))
 
-        if bestDecision.selfInterestScale is not None:
-            print("This decision was made with a self interest scale of " + str(bestDecision.selfInterestScale))
+        if bestDecision.self_interest_scale is not None:
+            print("This decision was made with a self interest scale of " + str(bestDecision.self_interest_scale))
         print()
 
     def getDecisionWithHighestValue(self):
