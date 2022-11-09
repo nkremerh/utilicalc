@@ -123,14 +123,14 @@ if __name__ == "__main__":
     evaluate.addDecision("Pull Lever", TrolleyProblem_PullLever)
 
     evaluate.printMoralValueForAllDecisions()
-    evaluate.printBestDecision()
+    evaluate.printDecisionWithHighestValue()
 
     # Evaluate again taking into account the egoistic nature of the decision maker
     evaluate.setSelfInterestScale(1)
     evaluate.printMoralValueForAllDecisions()
-    evaluate.printBestDecision()
+    evaluate.printDecisionWithHighestValue()
 
     # Evaluate again taking into account the altruistic nature of the decision maker
     evaluate.setSelfInterestScale(0)
     evaluate.printMoralValueForAllDecisions()
-    evaluate.printBestDecision()
+    evaluate.printDecisionWithHighestValue()

@@ -104,6 +104,9 @@ class Agent:
     def getMoralValue(self):
         return sum(self.consequences)
 
+    def getNegativeMoralValue(self):
+        return sum([x for x in self.consequences if x < 0])
+
 
 class Decision:
     """
@@ -152,6 +155,20 @@ class Decision:
                     totalMoralValue += agent[0].getMoralValue() * (1 - self.self_interest_scale)
             else:
                 totalMoralValue += agent[0].getMoralValue()
+
+        return round(totalMoralValue, 2)
+
+    def getNegativeMoralValue(self):
+        totalMoralValue = 0
+
+        for agent in self.agents:
+            if self.self_interest_scale is not None:
+                if agent[1]:
+                    totalMoralValue += agent[0].getNegativeMoralValue() * self.self_interest_scale
+                else:
+                    totalMoralValue += agent[0].getNegativeMoralValue() * (1 - self.self_interest_scale)
+            else:
+                totalMoralValue += agent[0].getNegativeMoralValue()
 
         return round(totalMoralValue, 2)
 
@@ -211,16 +228,31 @@ class EvaluateDecisions:
         for decision in self.decisions:
             print(decision[0] + ": " + str(decision[1].getMoralValue()))
 
-    def printBestDecision(self):
+    def printDecisionWithHighestValue(self):
         bestDecisionName, bestDecision = max(self.decisions, key=lambda x: x[1].getMoralValue())
 
-        print("The best decision is: " + bestDecisionName + ". with a moral value of " + str(
+        print("The best decision from a standard Utilitarian perspective is: " + bestDecisionName + ". with a moral value of " + str(
             bestDecision.getMoralValue()))
 
         if bestDecision.self_interest_scale is not None:
             print("This decision was made with a self interest scale of " + str(bestDecision.self_interest_scale))
         print()
 
-    def getBestDecision(self):
+    # prints the decision with the negative moral value closest to 0
+    def printDecisionWithLeastNegativeValue(self):
+        bestDecisionName, bestDecision = max(self.decisions, key=lambda x: x[1].getNegativeMoralValue())
+
+        print("The best decision from a Negative Utilitarian perspective is: " + bestDecisionName + ". with a moral value of " + str(
+            bestDecision.getMoralValue()))
+
+        if bestDecision.self_interest_scale is not None:
+            print("This decision was made with a self interest scale of " + str(bestDecision.self_interest_scale))
+        print()
+
+    def getDecisionWithHighestValue(self):
         bestDecisionName, bestDecision = max(self.decisions, key=lambda x: x[1].getMoralValue())
+        return bestDecisionName
+
+    def getDecisionWithLeastNegativeValue(self):
+        bestDecisionName, bestDecision = max(self.decisions, key=lambda x: x[1].getNegativeMoralValue())
         return bestDecisionName
