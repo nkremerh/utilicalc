@@ -1,5 +1,4 @@
-from FelicificCalculus import Decision
-from FelicificCalculus import EvaluateDecisions
+import felicific_calculus as fc
 
 if __name__ == "__main__":
     """
@@ -13,7 +12,7 @@ if __name__ == "__main__":
     """
 
     # Decision 1: Help the families
-    LifeboatProblem_HelpFamilies = Decision()
+    lifeboatHelpFamilies = fc.Decision()
 
     # Agent 1: The families
     # isPleasure: True
@@ -28,7 +27,7 @@ if __name__ == "__main__":
     # f_propinquity: 1
     # f_multiplier: 9
     # Multiplier: 9 -- 3 families with 3 people each
-    LifeboatProblem_HelpFamilies.createAgent(True, 5, 3, 1, 1, 1, 0, 9, 0, 0, 0, 0, 3, 8, 1, 9)
+    lifeboatHelpFamilies.createAgent(True, 5, 3, 1, 1, 1, 0, 9, 0, 0, 0, 0, 3, 8, 1, 9)
 
     # Agent 2: The seniors
     # isPleasure: False
@@ -39,7 +38,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 5 -- 5 seniors
-    LifeboatProblem_HelpFamilies.createAgent(False, 10, 1, .7, 1, 0, 0, 5)
+    lifeboatHelpFamilies.createAgent(False, 10, 1, .7, 1, 0, 0, 5)
 
     # Agent 3: The young, strong people
     # isPleasure: False
@@ -50,7 +49,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 5 -- 5 young, strong people
-    LifeboatProblem_HelpFamilies.createAgent(False, 1, 2, 1, 1, 0, 0, 5)
+    lifeboatHelpFamilies.createAgent(False, 1, 2, 1, 1, 0, 0, 5)
 
     # Agent 4: You
     # isPleasure: False
@@ -65,10 +64,10 @@ if __name__ == "__main__":
     # p_propinquity: 1
     # p_multiplier: 1
     # Multiplier: 1
-    LifeboatProblem_HelpFamilies.createAgent(False, 10, 1, .5, 1, 0, .5, 1, 0, 0, 0, 0, 1.5, 4, 1, 1, is_decision_maker=True)
+    lifeboatHelpFamilies.createAgent(False, 10, 1, .5, 1, 0, .5, 1, 0, 0, 0, 0, 1.5, 4, 1, 1, isDecisionMaker=True)
 
     # Decision 2: Help the seniors
-    LifeboatProblem_HelpSeniors = Decision()
+    lifeboatHelpSeniors = fc.Decision()
 
     # Agent 1: The families
     # isPleasure: False
@@ -79,7 +78,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 9 -- 3 families with 3 people each
-    LifeboatProblem_HelpSeniors.createAgent(False, 10, 1, .5, 1, 0, 0, 9)
+    lifeboatHelpSeniors.createAgent(False, 10, 1, .5, 1, 0, 0, 9)
 
     # Agent 2: The seniors
     # isPleasure: True
@@ -94,7 +93,7 @@ if __name__ == "__main__":
     # f_propinquity: 1
     # f_multiplier: 5
     # Multiplier: 5 -- 5 seniors
-    LifeboatProblem_HelpSeniors.createAgent(True, 5, 3, 1, 1, 1, 0, 5, 0, 0, 0, 0, 3, 4, 1, 5)
+    lifeboatHelpSeniors.createAgent(True, 5, 3, 1, 1, 1, 0, 5, 0, 0, 0, 0, 3, 4, 1, 5)
 
     # Agent 3: The young, strong people
     # isPleasure: False
@@ -105,7 +104,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 5 -- 5 young, strong people
-    LifeboatProblem_HelpSeniors.createAgent(False, 1, 2, 1, 1, 0, 0, 5)
+    lifeboatHelpSeniors.createAgent(False, 1, 2, 1, 1, 0, 0, 5)
 
     # Agent 4: You
     # isPleasure: False
@@ -120,10 +119,10 @@ if __name__ == "__main__":
     # p_propinquity: 1
     # p_multiplier: 1
     # Multiplier: 1
-    LifeboatProblem_HelpSeniors.createAgent(False, 10, 1, .7, 1, 0, .3, 1, 0, 0, 0, 0, 1.5, 4, 1, 1, is_decision_maker=True)
+    lifeboatHelpSeniors.createAgent(False, 10, 1, .7, 1, 0, .3, 1, 0, 0, 0, 0, 1.5, 4, 1, 1, isDecisionMaker=True)
 
     # Decision 3: Help the young, strong people
-    LifeboatProblem_HelpYoung = Decision()
+    lifeboatHelpYoung = fc.Decision()
 
     # Agent 1: The families
     # isPleasure: False
@@ -134,7 +133,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 9 -- 3 families with 3 people each
-    LifeboatProblem_HelpYoung.createAgent(False, 10, 1, .5, 1, 0, 0, 9)
+    lifeboatHelpYoung.createAgent(False, 10, 1, .5, 1, 0, 0, 9)
 
     # Agent 2: The seniors
     # isPleasure: False
@@ -145,7 +144,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 5 -- 5 seniors
-    LifeboatProblem_HelpYoung.createAgent(False, 10, 1, .7, 1, 0, 0, 5)
+    lifeboatHelpYoung.createAgent(False, 10, 1, .7, 1, 0, 0, 5)
 
     # Agent 3: The young, strong people
     # isPleasure: True
@@ -156,7 +155,7 @@ if __name__ == "__main__":
     # Fecundity: 0 -- They would have survived anyway
     # Purity: 0
     # Multiplier: 5 -- 5 young, strong people
-    LifeboatProblem_HelpYoung.createAgent(True, 2, 2, 1, 1, 0, 0, 5)
+    lifeboatHelpYoung.createAgent(True, 2, 2, 1, 1, 0, 0, 5)
 
     # Agent 4: You
     # isPleasure: True
@@ -171,13 +170,13 @@ if __name__ == "__main__":
     # p_propinquity: 1
     # p_multiplier: 1
     # Multiplier: 1
-    LifeboatProblem_HelpYoung.createAgent(True, 5, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1.5, 8, 1, 1, is_decision_maker=True)
+    lifeboatHelpYoung.createAgent(True, 5, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1.5, 8, 1, 1, isDecisionMaker=True)
 
     # Evaluate the decisions
-    evaluate = EvaluateDecisions()
-    evaluate.addDecision("Help Families", LifeboatProblem_HelpFamilies)
-    evaluate.addDecision("Help Seniors", LifeboatProblem_HelpSeniors)
-    evaluate.addDecision("Help young people & maximize own survival", LifeboatProblem_HelpYoung)
+    evaluate = fc.EvaluateDecisions()
+    evaluate.addDecision("Help Families", lifeboatHelpFamilies)
+    evaluate.addDecision("Help Seniors", lifeboatHelpSeniors)
+    evaluate.addDecision("Help young people & maximize own survival", lifeboatHelpYoung)
 
     # Print the results
     evaluate.printMoralValueForAllDecisions()

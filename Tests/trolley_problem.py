@@ -1,5 +1,4 @@
-from FelicificCalculus import Decision
-from FelicificCalculus import EvaluateDecisions
+import felicific_calculus as fc
 
 if __name__ == "__main__":
     """
@@ -16,7 +15,7 @@ if __name__ == "__main__":
     # Evaluate first without taking into account the egoistic/altruistic nature of the decision maker
 
     # Decision 1: Do nothing
-    TrolleyProblem_DoNothing = Decision()
+    trolleyDoNothing = fc.Decision()
 
     # Agent 1: The five people on the main track killed by the trolley
     # isPleasure: False
@@ -27,7 +26,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 5 -- 5 people
-    TrolleyProblem_DoNothing.createAgent(False, 10, 1, 1, 1, 1, 0, 5)
+    trolleyDoNothing.createAgent(False, 10, 1, 1, 1, 1, 0, 5)
 
     # Agent 2: The person on the side track not killed by the trolley
     # isPleasure: True
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     # p_propinquity: 1
     # p_multiplier: 1
     # Multiplier: 1 -- 1 person
-    TrolleyProblem_DoNothing.createAgent(True, 3, 3, 1, 1, 0, .8, 1, 0, 0, 0, 0, 1.5, 4, 1, 1)
+    trolleyDoNothing.createAgent(True, 3, 3, 1, 1, 0, .8, 1, 0, 0, 0, 0, 1.5, 4, 1, 1)
 
     # Agent 3: You
     # isPleasure: False
@@ -53,7 +52,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 1 -- 1 person
-    TrolleyProblem_DoNothing.createAgent(False, 1, 5, 1, 1, 0, 0, 1, is_decision_maker=True)
+    trolleyDoNothing.createAgent(False, 1, 5, 1, 1, 0, 0, 1, isDecisionMaker=True)
 
     # Agent 4: The family of the five people on the main track
     # isPleasure: False
@@ -64,10 +63,10 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 5 -- 5 people
-    TrolleyProblem_DoNothing.createAgent(False, 5, 5, 1, 1, 0, 0, 5)
+    trolleyDoNothing.createAgent(False, 5, 5, 1, 1, 0, 0, 5)
 
     # Decision 2: Pull the lever
-    TrolleyProblem_PullLever = Decision()
+    trolleyPullLever = fc.Decision()
 
     # Agent 1: The five people on the main track not killed by the trolley
     # isPleasure: True
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     # p_propinquity: 1
     # p_multiplier: 5
     # Multiplier: 5
-    TrolleyProblem_PullLever.createAgent(True, 3, 3, 1, 1, 0, .8, 5, 0, 0, 0, 0, 1.5, 4, 1, 5)
+    trolleyPullLever.createAgent(True, 3, 3, 1, 1, 0, .8, 5, 0, 0, 0, 0, 1.5, 4, 1, 5)
 
     # Agent 2: The one person on the side track killed by the trolley
     # isPleasure: False
@@ -93,7 +92,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 1
     # Multiplier: 1
-    TrolleyProblem_PullLever.createAgent(False, 10, 1, 1, 1, 1, 0, 1)
+    trolleyPullLever.createAgent(False, 10, 1, 1, 1, 1, 0, 1)
 
     # Agent 3: You
     # isPleasure: False
@@ -104,7 +103,7 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 1 -- You will feel good about saving the five people
     # Multiplier: 1
-    TrolleyProblem_PullLever.createAgent(False, 3, 10, 1, 1, 0, 1, 1, is_decision_maker=True)
+    trolleyPullLever.createAgent(False, 3, 10, 1, 1, 0, 1, 1, isDecisionMaker=True)
 
     # Agent 4: The family of the one person on the side track
     # isPleasure: False
@@ -115,12 +114,12 @@ if __name__ == "__main__":
     # Fecundity: 0
     # Purity: 0
     # Multiplier: 1
-    TrolleyProblem_PullLever.createAgent(False, 5, 5, 1, 1, 0, 0, 1)
+    trolleyPullLever.createAgent(False, 5, 5, 1, 1, 0, 0, 1)
 
     # Evaluate the decisions
-    evaluate = EvaluateDecisions()
-    evaluate.addDecision("Do Nothing", TrolleyProblem_DoNothing)
-    evaluate.addDecision("Pull Lever", TrolleyProblem_PullLever)
+    evaluate = fc.EvaluateDecisions()
+    evaluate.addDecision("Do Nothing", trolleyDoNothing)
+    evaluate.addDecision("Pull Lever", trolleyPullLever)
 
     evaluate.printMoralValueForAllDecisions()
     evaluate.printDecisionWithHighestValue()
