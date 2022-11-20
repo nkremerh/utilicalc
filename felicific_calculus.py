@@ -212,6 +212,12 @@ class EvaluateDecisions:
         self.selfInterestScale = None
         self.decisions = []
 
+    def getSelfInterestScale(self):
+        return self.selfInterestScale
+
+    def getDecisions(self):
+        return self.decisions
+
     def addDecision(self, decisionName, decision):
         if self.setSelfInterestScale is not None:
             decision.setSelfInterestScale(self.selfInterestScale)
